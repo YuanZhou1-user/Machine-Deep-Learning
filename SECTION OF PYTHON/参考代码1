@@ -1,0 +1,174 @@
+"""
+购物车管理系统
+功能：添加、修改、删除、查询商品
+"""
+import sys
+
+
+class ShoppingCart:
+    """购物车类，管理商品信息"""
+    
+    def __init__(self):
+        """初始化空购物车"""
+        self.cart = {}
+        self.menu_options = {
+            "1": ("添加商品", self.add_item),
+            "2": ("修改商品", self.update_item),
+            "3": ("删除商品", self.delete_item),
+            "4": ("查看购物车", self.view_cart),
+            "5": ("退出系统", self.exit_system)
+        }
+    
+    def add_item(self):
+        """添加商品到购物车"""
+        while True:
+            name = input("请输入商品名称（输入q或quit退出）：").strip()
+            if self._is_exit(name):
+                return
+            
+            if name in self.cart:
+                print(f"⚠️ 商品「{name}」已存在，请使用修改功能！")
+                continue
+            
+            try:
+                price = float(input("请输入商品价格："))
+                quantity = int(input("请输入商品数量："))
+                if price < 0 or quantity < 0:
+                    print("❌ 价格和数量不能为负数！")
+                    continue
+            except ValueError:
+                print("❌ 价格请输入数字，数量请输入整数！")
+                continue
+            
+            self.cart[name] = {"price": price, "quantity": quantity}
+            print(f"✅ 商品「{name}」添加成功！")
+            return
+    
+    def update_item(self):
+        """修改购物车中的商品"""
+        if not self.cart:
+            print("⚠️ 您的购物车目前为空！")
+            return
+        
+        name = input("请输入要修改的商品名称（输入q或quit退出）：").strip()
+        if self._is_exit(name):
+            return
+        
+        if name not in self.cart:
+            print(f"❌ 购物车中没有商品「{name}」！")
+            return
+        
+        # 显示当前信息
+        item = self.cart[name]
+        print(f"📦 当前信息：{name} - 价格：{item['price']}，数量：{item['quantity']}")
+        
+        try:
+            price = input("请输入修改后的价格（直接回车保持不变）：").strip()
+            quantity = input("请输入修改后的数量（直接回车保持不变）：").strip()
+            
+            if price:
+                price = float(price)
+                if price < 0:
+                    print("❌ 价格不能为负数！")
+                    return
+                self.cart[name]["price"] = price
+            
+            if quantity:
+                quantity = int(quantity)
+                if quantity < 0:
+                    print("❌ 数量不能为负数！")
+                    return
+                self.cart[name]["quantity"] = quantity
+                
+        except ValueError:
+            print("❌ 价格请输入数字，数量请输入整数！")
+            return
+        
+        print(f"✅ 商品「{name}」修改成功！")
+    
+    def delete_item(self):
+        """删除购物车中的商品"""
+        if not self.cart:
+            print("⚠️ 您的购物车目前为空！")
+            return
+        
+        name = input("请输入要删除的商品名称（输入q或quit退出）：").strip()
+        if self._is_exit(name):
+            return
+        
+        if name not in self.cart:
+            print(f"❌ 购物车中没有商品「{name}」！")
+            return
+        
+        del self.cart[name]
+        print(f"✅ 商品「{name}」删除成功！")
+    
+    def view_cart(self):
+        """查看购物车所有商品"""
+        if not self.cart:
+            print("⚠️ 您的购物车目前为空！")
+            return
+        
+        print("\n" + "=" * 40)
+        print("🛒 当前购物车内容：")
+        print("-" * 40)
+        
+        total = 0
+        for idx, (name, info) in enumerate(self.cart.items(), 1):
+            subtotal = info["price"] * info["quantity"]
+            total += subtotal
+            print(f"{idx}. {name}  |  价格：¥{info['price']:.2f}  |  数量：{info['quantity']}  |  小计：¥{subtotal:.2f}")
+        
+        print("-" * 40)
+        print(f"💰 总计：¥{total:.2f}")
+        print(f"📦 共 {len(self.cart)} 种商品")
+        print("=" * 40 + "\n")
+    
+    def exit_system(self):
+        """退出系统"""
+        print("👋 欢迎下次再来！")
+        sys.exit(0)
+    
+    def _is_exit(self, text):
+        """检查是否为退出指令（内部方法）"""
+        return text.lower() in ("q", "quit", "exit")
+    
+    def _display_menu(self):
+        """显示菜单"""
+        print("\n" + "=" * 40)
+        print("      🛒 购物车管理系统")
+        print("=" * 40)
+        for key, (desc, _) in self.menu_options.items():
+            print(f"  {key}. {desc}")
+        print("=" * 40)
+    
+    def run(self):
+        """主程序入口"""
+        while True:
+            self._display_menu()
+            choice = input("请选择操作（1-5）：").strip()
+            
+            if choice not in self.menu_options:
+                print("❌ 无效输入，请输入 1-5！")
+                continue
+            
+            # 执行对应的功能
+            _, action = self.menu_options[choice]
+            action()
+
+
+def main():
+    """程序入口函数"""
+    print("\n🎯 欢迎进入购物车管理系统！")
+    print("提示：在任意输入环节输入 q/quit/exit 可返回主菜单")
+    
+    cart = ShoppingCart()
+    try:
+        cart.run()
+    except KeyboardInterrupt:
+        print("\n\n👋 检测到退出信号，欢迎下次再来！")
+        sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()

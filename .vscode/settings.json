@@ -1,0 +1,26 @@
+{
+  "python.defaultInterpreterPath": "C:/Users/34979/AppData/Local/Programs/Python/Python314/python.exe",
+  "python.terminal.activateEnvironment": true,
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}"
+  ],
+  "python-envs.defaultEnvManager": "ms-python.python:system",
+  "editor.quickSuggestions": {
+    "comments": "off",
+    "strings": "off",
+    "other": "off"
+  },
+  "editor.suggestOnTriggerCharacters": false,
+  "editor.parameterHints.enabled": true,
+  "editor.hover.enabled": "on",
+  "jupyter.askForKernelRestart": false,
+  "jupyter.logging.level": "WARNING",
+  "notebook.cellToolbarLocation": {
+    "default": "right"
+  },
+  "notebook.lineNumbers": "on",
+  "notebook.showCellStatusBar": "always",
+  "notebook.output.fontSize": 13,
+  "notebook.output.lineHeight": 1.5,
+  "jupyter.interactiveWindow.creationMode": "perFile"
+}
